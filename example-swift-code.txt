@@ -1,0 +1,33 @@
+import Foundation
+
+let headers = [
+ "cache-control": "no-cache",
+ "content-type": "application/x-www-form-urlencoded"
+]
+
+let postData = NSMutableData(data: "user_API_token=YOUR-EV-API-TOKEN".data(using: String.Encoding.utf8)!)
+postData.append("&role_address=true".data(using: String.Encoding.utf8)!)
+postData.append("&bad_address=true".data(using: String.Encoding.utf8)!)
+postData.append("&free_email=true".data(using: String.Encoding.utf8)!)
+postData.append("&disposable=true".data(using: String.Encoding.utf8)!)
+postData.append("&typo_suggest=true".data(using: String.Encoding.utf8)!)
+postData.append("&source_file=https://www.domain.com/my-mailing-list.csv".data(using: String.Encoding.utf8)!)
+
+let request = NSMutableURLRequest(url: NSURL(string: "https://api.evasrv.com/batch_process/")! as URL,
+ cachePolicy: .useProtocolCachePolicy,
+ timeoutInterval: 10.0)
+request.httpMethod = "POST"
+request.allHTTPHeaderFields = headers
+request.httpBody = postData as Data
+
+let session = URLSession.shared
+let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+ if (error != nil) {
+ print(error)
+ } else {
+ let httpResponse = response as? HTTPURLResponse
+ print(httpResponse)
+ }
+})
+
+dataTask.resume()
